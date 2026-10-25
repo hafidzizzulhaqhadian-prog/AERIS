@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import IOKit.ps
+import QuartzCore
 
 @main
 struct AERISApp: App {
@@ -28,11 +29,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let newHeight: CGFloat = expanded ? 88 : 34
             let topEdge = panel.frame.maxY
             let originX = panel.frame.midX - newWidth / 2
-            panel.setFrame(
-                NSRect(x: originX, y: topEdge - newHeight, width: newWidth, height: newHeight),
-                display: true,
-                animate: true
-            )
+
+NSAnimationContext.runAnimationGroup { context in
+    context.duration = 0.38
+    context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+    panel.animator().setFrame(
+        NSRect(
+            x: originX,
+            y: topEdge - newHeight,
+            width: newWidth,
+            height: newHeight
+        ),
+        display: true
+    )
+}
         })
 
         panel.isOpaque = false
@@ -41,7 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.level = .normal
         panel.collectionBehavior = []
         // Keep AERIS out of other apps' fullscreen Spaces and let normal app windows cover it.
-        panel.hidesOnDeactivate = true
+        panel.hidesOnDeactivate = false
         panel.ignoresMouseEvents = false
         panel.isMovableByWindowBackground = false
 
@@ -130,28 +141,53 @@ struct IslandView: View {
             }
         }
         .frame(width: expanded ? 246 : 224)
-        .background {
-            ZStack {
-                // Soft tinted glass base with subtle top sheen.
-                RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .environment(\.colorScheme, .dark)
-                RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            stops: [
-                                .init(color: .white.opacity(0.17), location: 0),
-                                .init(color: .white.opacity(0.055), location: 0.28),
-                                .init(color: .black.opacity(0.45), location: 1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous)
-                    .fill(Color.black.opacity(0.22))
-            }
-        }
+
+.background {
+    ZStack {
+        // Clear glass base: no material blur.
+        RoundedRectangle(
+            cornerRadius: expanded ? 25 : 18,
+            style: .continuous
+        )
+        .fill(Color.white.opacity(0.035))
+
+        // Main glass gradient: bright at the top, subtle depth below.
+        RoundedRectangle(
+            cornerRadius: expanded ? 25 : 18,
+            style: .continuous
+        )
+        .fill(
+            LinearGradient(
+                stops: [
+                    .init(color: .white.opacity(0.23), location: 0.0),
+                    .init(color: .white.opacity(0.09), location: 0.16),
+                    .init(color: .white.opacity(0.025), location: 0.48),
+                    .init(color: .black.opacity(0.13), location: 1.0)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+
+        // Subtle cool tint for a dimensional glass appearance.
+        RoundedRectangle(
+            cornerRadius: expanded ? 25 : 18,
+            style: .continuous
+        )
+        .fill(
+            LinearGradient(
+                colors: [
+                    Color(red: 0.72, green: 0.84, blue: 1.0)
+                        .opacity(0.07),
+                    .clear,
+                    Color.black.opacity(0.06)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+}
         .clipShape(RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous)
@@ -161,21 +197,32 @@ struct IslandView: View {
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
-                    lineWidth: 0.8
+                    lineWidth: 1.0
                 )
         }
-        .overlay(alignment: .top) {
-            Capsule()
-                .fill(LinearGradient(colors: [.white.opacity(0.42), .white.opacity(0.04)], startPoint: .top, endPoint: .bottom))
-                .frame(width: expanded ? 110 : 72, height: 1)
-                .padding(.top, 0.5)
-                .opacity(0.85)
-        }
-        .shadow(color: .black.opacity(0.26), radius: 10, y: 4)
+
+.overlay(alignment: .top) {
+    Capsule()
+        .fill(
+            LinearGradient(
+                colors: [
+                    .white.opacity(0.32),
+                    .white.opacity(0.12),
+                    .white.opacity(0.02)
+                ],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+        )
+        .frame(width: expanded ? 100 : 66, height: 0.8)
+        .padding(.top, 0.5)
+        .opacity(0.75)
+}
+        .shadow(color: .black.opacity(0.32), radius: 14, y: 5)
         .contentShape(RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous))
         .onHover { hovering = $0 }
         .onTapGesture {
-            withAnimation(.spring(response: 0.38, dampingFraction: 0.86)) {
+            withAnimation(.spring(response: 0.46, dampingFraction: 0.88)) {
                 expanded.toggle()
             }
         }
