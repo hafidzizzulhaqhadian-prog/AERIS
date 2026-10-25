@@ -1,0 +1,20 @@
+AERIS 0.3.2 — Clear Glass (Fullscreen Fix)
+
+PENTING: ZIP ini berisi SOURCE CODE, bukan aplikasi .app siap pakai.
+
+CARA MULAI TANPA DRAG-AND-DROP:
+1. Ekstrak ZIP ke Downloads.
+2. Buka Terminal.
+3. Jalankan perintah ini satu per satu:
+
+   cd ~/Downloads/AERIS-0.3.1-Clear-Glass
+   bash build.sh
+   open build/AERIS.app
+
+Jika folder hasil ekstrak namanya berbeda, sesuaikan nama folder di perintah cd.
+
+Perbaikan fullscreen:
+- AERIS tidak lagi memakai collectionBehavior yang dapat membuatnya ikut semua Spaces.
+- hidesOnDeactivate diaktifkan supaya panel bersembunyi ketika aplikasi lain aktif.
+
+Jika build gagal, salin teks error Terminal untuk diperiksa.
