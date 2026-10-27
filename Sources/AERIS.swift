@@ -90,7 +90,7 @@ private let weatherRefresh = Timer.publish(
 
     private let clock = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private let refresh = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
-    private let musicRefresh = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    private let musicRefresh = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private let activeAppRefresh = Timer.publish(
         every: 2,
         on: .main,
@@ -326,7 +326,7 @@ HStack(spacing: 8) {
             cornerRadius: expanded ? 25 : 18,
             style: .continuous
         )
-        .fill(Color.white.opacity(0.035))
+        .fill(.regularMaterial)
 
         // Main glass gradient: bright at the top, subtle depth below.
         RoundedRectangle(
@@ -336,10 +336,10 @@ HStack(spacing: 8) {
         .fill(
             LinearGradient(
                 stops: [
-                    .init(color: .white.opacity(0.23), location: 0.0),
-                    .init(color: .white.opacity(0.09), location: 0.16),
-                    .init(color: .white.opacity(0.025), location: 0.48),
-                    .init(color: .black.opacity(0.13), location: 1.0)
+                    .init(color: .white.opacity(0.19), location: 0.0),
+                    .init(color: .white.opacity(0.075), location: 0.18),
+                    .init(color: .white.opacity(0.018), location: 0.52),
+                    .init(color: .black.opacity(0.16), location: 1.0)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -370,7 +370,7 @@ HStack(spacing: 8) {
             RoundedRectangle(cornerRadius: expanded ? 25 : 18, style: .continuous)
                 .strokeBorder(
                     LinearGradient(
-                        colors: [.white.opacity(hovering ? 0.38 : 0.28), .white.opacity(0.07), .white.opacity(0.16)],
+                        colors: [.white.opacity(hovering ? 0.42 : 0.32), .white.opacity(0.055), .white.opacity(0.13)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
