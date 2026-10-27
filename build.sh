@@ -39,6 +39,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>LSUIElement</key><true/>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>AERIS membaca informasi lagu dan mengontrol pemutaran Apple Music atau Spotify.</string>
 </dict>
 </plist>
 PLIST
